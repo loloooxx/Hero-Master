@@ -50,8 +50,9 @@ class BaseCharacter {
 }
 
 class Hero extends BaseCharacter {
-  constructor(name, hp, ap) {
+  constructor(name, hp, ap, cp) {
     super(name, hp, ap);
+    this.cp = cp;
 
     this.element = document.getElementById("hero-image-block");
     this.hpElement = document.getElementById("hero-hp");
@@ -71,6 +72,14 @@ class Hero extends BaseCharacter {
     super.getHurt(damage);
     this.updateHtml(this.hpElement, this.hurtElement);
   }
+
+  heal() {
+    var recover = Math.random() * (this.cp / 2) + (this.cp / 2);
+    this.hp += Math.floor(recover);
+    this.hp > this.maxHp ? this.hp = this.maxHp : this.hp;
+    this.updateHtml(this.hpElement, this.hurtElement);
+  }
+
 }
 
 class Monster extends BaseCharacter {
@@ -98,7 +107,7 @@ class Monster extends BaseCharacter {
 }
 
 var rounds = 10;
-var hero = new Hero("Bernard", 130, 30);
+var hero = new Hero("Bernard", 130, 30, 30);
 var monster = new Monster("Skeleton", 130, 30);
 
 function endTurn() {
@@ -146,6 +155,12 @@ function addSkillEvent() {
   skill.onclick = function() {
     heroAttack();
   }
+
+  var heal = document.getElementById("heal");
+  heal.onclick = function() {
+    heroHeal();
+  }
+
 }
 addSkillEvent(); 
 
@@ -157,4 +172,24 @@ function finish() {
   } else {
     dialog.classList.add("lose");
   }
+}
+
+function heroHeal() {
+  document.getElementsByClassName("skill-block")[0].style.display = "none";
+   setTimeout(function() {
+    hero.heal();
+  }, 500);
+   setTimeout(function() {
+    monster.element.classList.add("attacking");
+    setTimeout(function() {
+      monster.attack(hero);
+      monster.element.classList.remove("attacking");
+      endTurn();
+      if (hero.alive == false) {
+        finish();
+      } else {
+        document.getElementsByClassName("skill-block")[0].style.display = "block";
+      }
+    }, 500);
+  }, 500);
 }
