@@ -83,11 +83,14 @@ class Hero extends BaseCharacter {
     var i = 1;
     _this.id = setInterval(function() {
        if (i == 1) {
+        _this.element.getElementsByClassName("effect-image")[0].style.display = "block";
         _this.element.getElementsByClassName("heal-text")[0].classList.add("recovered");
         _this.element.getElementsByClassName("heal-text")[0].textContent = recover;
       }
+       _this.element.getElementsByClassName("effect-image")[0].src = 'images/effect/heal/' + i + '.png';
        i++;
       if (i > 8) {
+        _this.element.getElementsByClassName("effect-image")[0].style.display = "none";
         _this.element.getElementsByClassName("heal-text")[0].classList.remove("recovered");
         _this.element.getElementsByClassName("heal-text")[0].textContent = "";
         clearInterval(_this.id);
